@@ -2,6 +2,7 @@ import 'package:effective_mobile_flutter_task/build_context_ext.dart';
 import 'package:effective_mobile_flutter_task/pages/page1/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:effective_mobile_flutter_task/client.dart';
 
 import 'profile.dart';
 
@@ -14,17 +15,26 @@ class Page1 extends StatefulWidget {
 
 class _Page1State extends State<Page1> {
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Home(),
-    Text('Favorite'),
-    Text('Cart'),
-    Text('Chat'),
-    Profile(),
+  Client? client;
+  late final Profile profile;
+
+  static final List<Widget> _widgetOptions = <Widget>[
+    const Home(),
+    const Text('Favorite'),
+    const Text('Cart'),
+    const Text('Chat'),
   ];
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+
+    if (client == null) {
+      client = ModalRoute.of(context)!.settings.arguments as Client;
+      profile = Profile(client: client!);
+      _widgetOptions.add(profile);
+    }
+
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

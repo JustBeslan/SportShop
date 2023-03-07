@@ -1,5 +1,8 @@
 import 'package:effective_mobile_flutter_task/build_context_ext.dart';
 import 'package:flutter/material.dart';
+import 'package:effective_mobile_flutter_task/client.dart';
+
+import '../db_provider.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({Key? key}) : super(key: key);
@@ -12,6 +15,8 @@ class _LogInPageState extends State<LogInPage> {
 
   final _formKey = GlobalKey<FormState>();
   late bool _passwordVisible = false;
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +34,11 @@ class _LogInPageState extends State<LogInPage> {
                   style: context.text.authTitle,
                 ),
                 const SizedBox(height: 70),
-                _buildTextField('First name'),
+                _buildTextField('First name', _firstNameController),
                 const SizedBox(height: 35),
                 _buildTextField(
                   'Password',
+                    _passwordController,
                   IconButton(
                     icon: Icon(
                         _passwordVisible
@@ -51,11 +57,7 @@ class _LogInPageState extends State<LogInPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.pushNamedAndRemoveUntil(context, '/page1', (predicate) => false);
-                      }
-                    },
+                    onPressed: _loginUser,
                     style: ButtonStyle(
                       padding: MaterialStateProperty.all(
                         const EdgeInsets.all(20),
@@ -83,7 +85,45 @@ class _LogInPageState extends State<LogInPage> {
     );
   }
 
-  TextFormField _buildTextField(String hint,
+  Future<void> _loginUser() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _showSnackBar(context, "Processing data...", Colors.deepOrangeAccent);
+      });
+
+      Client client = Client(
+        firstName: _firstNameController.text,
+        password: _passwordController.text,
+      );
+
+      Client? foundClient = await DBProvider.db.existClient(client);
+      setState(() {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      });
+
+      if (foundClient != null) {
+        setState(() {
+          _showSnackBar(context, "Success", Colors.green);
+          Navigator.pushNamedAndRemoveUntil(context, '/page1', (predicate) => false, arguments: foundClient);
+        });
+      } else {
+        setState(() {
+          _showSnackBar(context, "User ${client.firstName} is not exist", Colors.red);
+        });
+      }
+    }
+  }
+
+  void _showSnackBar(BuildContext context, String message, [Color backgroundColor = Colors.black]) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: backgroundColor,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  TextFormField _buildTextField(String hint, TextEditingController controller,
       [IconButton? suffixIcon, bool isVisibleText = true]) {
 
     OutlineInputBorder outlineInputBorder = OutlineInputBorder(
@@ -106,6 +146,7 @@ class _LogInPageState extends State<LogInPage> {
     );
 
     return TextFormField(
+      controller: controller,
       obscureText: !isVisibleText,
       style: context.text.textInput,
       cursorColor: context.color.otherItemColor,
