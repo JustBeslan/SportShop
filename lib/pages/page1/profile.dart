@@ -1,11 +1,9 @@
 import 'package:effective_mobile_flutter_task/build_context_ext.dart';
 import 'package:effective_mobile_flutter_task/client.dart';
-import 'package:effective_mobile_flutter_task/db_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Profile extends StatefulWidget {
-  // const Profile({Key? key}) : super(key: key);
 
   final Client client;
   const Profile({super.key, required this.client});

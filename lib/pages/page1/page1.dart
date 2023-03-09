@@ -16,7 +16,7 @@ class Page1 extends StatefulWidget {
 class _Page1State extends State<Page1> {
 
   Client? client;
-  late final Profile profile;
+  Profile? profile;
 
   static final List<Widget> _widgetOptions = <Widget>[
     const Home(),
@@ -29,10 +29,16 @@ class _Page1State extends State<Page1> {
   @override
   Widget build(BuildContext context) {
 
-    if (client == null) {
-      client = ModalRoute.of(context)!.settings.arguments as Client;
-      profile = Profile(client: client!);
-      _widgetOptions.add(profile);
+    if (client == null && profile == null) {
+      client = ModalRoute.of(context)!.settings.arguments as Client?;
+      if (client != null) {
+        if (_widgetOptions.length == 5) {
+          _widgetOptions.last = Profile(client: client!);
+        } else {
+          profile = Profile(client: client!);
+          _widgetOptions.add(profile!);
+        }
+      }
     }
 
     return Scaffold(

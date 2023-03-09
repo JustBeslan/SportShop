@@ -15,102 +15,20 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
 
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _firstNameController = TextEditingController();
-  TextEditingController _lastNameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Center(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Sign in",
-                    style: context.text.authTitle,
-                  ),
-                  const SizedBox(height: 60),
-                  _buildTextField("First name", _firstNameController),
-                  const SizedBox(height: 25),
-                  _buildTextField("Last name", _lastNameController),
-                  const SizedBox(height: 25),
-                  _buildTextField("Email", _emailController),
-                  const SizedBox(height: 25),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _signinUser,
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
-                          const EdgeInsets.all(10),
-                        ),
-                        backgroundColor: MaterialStateProperty.all(
-                          context.color.mainButtonBackgroundColor,
-                        ),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        "Sign in",
-                        style: context.text.textMainButton,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      Text(
-                        "Already have an account?",
-                        style: context.text.labelText1,
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/log_in');
-                        },
-                        child: Text(
-                          "Log in",
-                          style: context.text.linkText,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 60),
-                  TextButton.icon(
-                    icon: SvgPicture.asset("assets/icons/google.svg"),
-                    onPressed: () {
-                      _showSnackBar(context, "Sign in with Google clicked");
-                    },
-                    label: Text(
-                      "Sign in with Google",
-                      style: context.text.additionalLoginText,
-                    ),
-                  ),
-                  const SizedBox(height: 22),
-                  TextButton.icon(
-                    icon: SvgPicture.asset("assets/icons/apple.svg"),
-                    onPressed: () {
-                      _showSnackBar(context, "Sign in with Apple clicked");
-                    },
-                    label: Text(
-                      "Sign in with Apple",
-                      style: context.text.additionalLoginText,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+      resizeToAvoidBottomInset: true,
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          return orientation == Orientation.portrait
+              ? _buildPortraitLayout()
+              : _buildLandscapeLayout();
+        },
       ),
     );
   }
@@ -156,6 +74,197 @@ class _SignInPageState extends State<SignInPage> {
         }
       }
     }
+  }
+
+  Widget _buildPortraitLayout() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                "Sign in",
+                style: context.text.authTitle,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 60),
+              _buildTextField("First name", _firstNameController),
+              const SizedBox(height: 25),
+              _buildTextField("Last name", _lastNameController),
+              const SizedBox(height: 25),
+              _buildTextField("Email", _emailController),
+              const SizedBox(height: 25),
+              SizedBox(
+                child: ElevatedButton(
+                  onPressed: _signinUser,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.all(10),
+                    ),
+                    backgroundColor: MaterialStateProperty.all(
+                      context.color.mainButtonBackgroundColor,
+                    ),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    "Sign in",
+                    style: context.text.textMainButton,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              Row(
+                children: [
+                  Text(
+                    "Already have an account?",
+                    style: context.text.labelText1,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/log_in');
+                    },
+                    child: Text(
+                      "Log in",
+                      style: context.text.linkText,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 60),
+              TextButton.icon(
+                icon: SvgPicture.asset("assets/icons/google.svg"),
+                onPressed: () {
+                  _showSnackBar(context, "Sign in with Google clicked");
+                },
+                label: Text(
+                  "Sign in with Google",
+                  style: context.text.additionalLoginText,
+                ),
+              ),
+              const SizedBox(height: 22),
+              TextButton.icon(
+                icon: SvgPicture.asset("assets/icons/apple.svg"),
+                onPressed: () {
+                  _showSnackBar(context, "Sign in with Apple clicked");
+                },
+                label: Text(
+                  "Sign in with Apple",
+                  style: context.text.additionalLoginText,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLandscapeLayout() {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Sign in",
+                style: context.text.authTitle,
+                textAlign: TextAlign.center,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Already have an account?",
+                    style: context.text.labelText1,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/log_in');
+                    },
+                    child: Text(
+                      "Log in",
+                      style: context.text.linkText,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              TextButton.icon(
+                icon: SvgPicture.asset("assets/icons/google.svg"),
+                onPressed: () {
+                  _showSnackBar(context, "Sign in with Google clicked");
+                },
+                label: Text(
+                  "Sign in with Google",
+                  style: context.text.additionalLoginText,
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextButton.icon(
+                icon: SvgPicture.asset("assets/icons/apple.svg"),
+                onPressed: () {
+                  _showSnackBar(context, "Sign in with Apple clicked");
+                },
+                label: Text(
+                  "Sign in with Apple",
+                  style: context.text.additionalLoginText,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildTextField("First name", _firstNameController),
+                  const SizedBox(height: 25),
+                  _buildTextField("Last name", _lastNameController),
+                  const SizedBox(height: 25),
+                  _buildTextField("Email", _emailController),
+                  const SizedBox(height: 25),
+                  ElevatedButton(
+                    onPressed: _signinUser,
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.all(10),
+                      ),
+                      backgroundColor: MaterialStateProperty.all(
+                        context.color.mainButtonBackgroundColor,
+                      ),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      "Sign in",
+                      style: context.text.textMainButton,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   void _showSnackBar(BuildContext context, String message, [Color backgroundColor = Colors.black]) {

@@ -15,47 +15,125 @@ class _LogInPageState extends State<LogInPage> {
 
   final _formKey = GlobalKey<FormState>();
   late bool _passwordVisible = false;
-  TextEditingController _firstNameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Center(
+      resizeToAvoidBottomInset: true,
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          return orientation == Orientation.portrait
+              ? _buildPortraitLayout()
+              : _buildLandscapeLayout();
+        },
+      ),
+    );
+  }
+
+  Widget _buildPortraitLayout() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Welcome back",
+                style: context.text.authTitle,
+              ),
+              const SizedBox(height: 70),
+              _buildTextField('First name', _firstNameController),
+              const SizedBox(height: 35),
+              _buildTextField(
+                  'Password',
+                  _passwordController,
+                  IconButton(
+                    icon: Icon(
+                        _passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                  ),
+                  _passwordVisible
+              ),
+              const SizedBox(height: 100),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _loginUser,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.all(20),
+                    ),
+                    backgroundColor: MaterialStateProperty.all(
+                      context.color.mainButtonBackgroundColor,
+                    ),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    "Login",
+                    style: context.text.textMainButton,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLandscapeLayout() {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            "Welcome back",
+            style: context.text.authTitle,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Welcome back",
-                    style: context.text.authTitle,
-                  ),
-                  const SizedBox(height: 70),
                   _buildTextField('First name', _firstNameController),
-                  const SizedBox(height: 35),
+                  const SizedBox(height: 10),
                   _buildTextField(
-                    'Password',
+                      'Password',
                       _passwordController,
-                    IconButton(
-                      icon: Icon(
-                          _passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _passwordVisible = !_passwordVisible;
-                        });
+                      IconButton(
+                        icon: Icon(
+                            _passwordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
                         },
-                    ),
-                    _passwordVisible
+                      ),
+                      _passwordVisible
                   ),
-                  const SizedBox(height: 100),
+                  const SizedBox(height: 30),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -84,7 +162,7 @@ class _LogInPageState extends State<LogInPage> {
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 

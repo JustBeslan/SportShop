@@ -1,4 +1,3 @@
-// import 'package:effective_mobile_flutter_task/pages/page1/profile.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/log_in.dart';
@@ -13,6 +12,5 @@ void main() => runApp(MaterialApp(
     '/sign_in': (context) => const SignInPage(),
     '/log_in': (context) => const LogInPage(),
     '/page1': (context) => const Page1(),
-    // '/profile': (context) => const Profile(),
   },
 ));
