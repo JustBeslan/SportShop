@@ -29,15 +29,13 @@ class _Page1State extends State<Page1> {
   @override
   Widget build(BuildContext context) {
 
-    if (client == null && profile == null) {
-      client = ModalRoute.of(context)!.settings.arguments as Client?;
-      if (client != null) {
-        if (_widgetOptions.length == 5) {
-          _widgetOptions.last = Profile(client: client!);
-        } else {
-          profile = Profile(client: client!);
-          _widgetOptions.add(profile!);
-        }
+    client = ModalRoute.of(context)!.settings.arguments as Client?;
+    if (client != null) {
+      if (_widgetOptions.length == 5) {
+        _widgetOptions.last = Profile(client: client!);
+      } else {
+        profile = Profile(client: client!);
+        _widgetOptions.add(profile!);
       }
     }
 

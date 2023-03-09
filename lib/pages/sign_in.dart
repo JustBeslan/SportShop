@@ -69,7 +69,7 @@ class _SignInPageState extends State<SignInPage> {
           setState(() {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             _showSnackBar(context, "Success", Colors.green);
-            Navigator.pushNamedAndRemoveUntil(context, '/page1', (predicate) => false);
+            Navigator.pushNamedAndRemoveUntil(context, '/page1', (predicate) => false, arguments: client);
           });
         }
       }
